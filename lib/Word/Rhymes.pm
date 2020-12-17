@@ -42,7 +42,7 @@ sub fetch {
         my @rhyming_words;
 
         for (@$data) {
-            say "$_->{word}: $_->{score}" if $_->{score} >= $self->min_score && DEBUG;
+            print "$_->{word}: $_->{score}\n" if $_->{score} >= $self->min_score && DEBUG;
             push @rhyming_words, "$_->{word}" if $_->{score} >= $self->min_score;
         }
 
@@ -71,7 +71,7 @@ sub max_results {
         croak("max_results must be an integer")
             if $max !~ /^\d+$/;
         croak("max_results must be between 1-1000")
-            if $max < 1 && $max > 1000;
+            if $max < 1 || $max > 1000;
 
         $self->{max_results} = $max;
     }
@@ -84,8 +84,8 @@ sub min_score {
     if (defined $min) {
         croak("min_score must be an integer")
             if $min !~ /^\d+$/;
-        croak("min-score must be between 1-300")
-            if $min < 1 && $min > 300;
+        croak("min_score must be between 1-300")
+            if $min < 1 || $min > 300;
 
         $self->{min_score} = $min;
     }
