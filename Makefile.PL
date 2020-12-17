@@ -11,6 +11,19 @@ WriteMakefile(
     LICENSE          => 'artistic_2',
     PL_FILES         => {},
     MIN_PERL_VERSION => '5.006',
+    META_MERGE => {
+        'meta-spec' => { version => 2 },
+        resources   => {
+            bugtracker => {
+                web => 'https://github.com/stevieb9/words-rhyme/issues',
+            },
+            repository => {
+                type => 'git',
+                url => 'https://github.com/stevieb9/words-rhyme.git',
+                web => 'https://github.com/stevieb9/words-rhyme',
+            },
+        },
+    },
     CONFIGURE_REQUIRES => {
         'ExtUtils::MakeMaker' => '0',
     },
@@ -18,8 +31,9 @@ WriteMakefile(
         'Test::More' => '0',
     },
     PREREQ_PM => {
-        #'ABC'              => '1.6',
-        #'Foo::Bar::Module' => '5.0401',
+        'JSON'              => 0,
+        'HTTP::Request'     => 0,
+        'LWP::UserAgent'    => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Word-Rhymes-*' },
