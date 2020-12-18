@@ -6,11 +6,13 @@ use Test::More;
 use Word::Rhymes;
 
 my $mod = 'Word::Rhymes';
+my $f = 't/data/zoo.data';
 
-# word: master
+ok 1;
+# word: zoo
 {
-    ok 1;
-    my $o = $mod->new;
+    my $o = $mod->new(file => $f);
+
     $o->fetch('master');
 }
 
