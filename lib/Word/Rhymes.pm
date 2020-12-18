@@ -72,6 +72,9 @@ sub fetch {
     if (! defined $word) {
         croak("fetch() needs a word sent in");
     }
+    if (defined $context && $context !~ /[a..zA..Z-]/) {
+        croak("context parameter must be an alpha word only.");
+    }
 
     my $req = HTTP::Request->new('GET', $self->uri($word, $context));
 
