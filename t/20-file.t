@@ -39,6 +39,7 @@ my $mod = 'Word::Rhymes';
 
 # no file (only for coverage purposes)
 {
+    print "*********************************** $ENV{WORD_RHYMES_NO_FILE}\n";
     if ($ENV{WORD_RHYMES_NO_FILE}) {
         is ref $mod->new->fetch('zoo'), 'HASH', "no file fetches from internet ok";
     }
