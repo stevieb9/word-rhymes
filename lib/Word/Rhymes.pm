@@ -13,7 +13,7 @@ use LWP::UserAgent;
 my $DEBUG = $ENV{WORD_RHYMES_DEBUG};
 
 use constant {
-    # Defaults
+    # Limits
     MIN_SCORE           => 0,
     MAX_RESULTS         => 0,
 
@@ -27,6 +27,8 @@ use constant {
 
 my $ua = LWP::UserAgent->new;
 
+# Public
+
 sub new {
     my ($class, %args) = @_;
 
@@ -35,34 +37,6 @@ sub new {
     $self->_args(\%args);
 
     return $self;
-}
-sub print {
-    my ($self, $word, $context) = @_;
-
-    my $rhyming_words = $self->fetch($word, $context);
-
-    #FIXME: Change below to hash, isolate each numSyllable arrays
-
-    my $max_word_len
-        = length((sort { length $b <=> length $a} @$rhyming_words)[0]);
-    my $column_width = $max_word_len + 3;
-
-    my $columns = $column_width > 15 ? 5 : 6;
-
-    if ($DEBUG) {
-        printf "matched word count: %d\n", scalar @$rhyming_words;
-        printf "column width: %d, column count: %d\n", $column_width, $columns;
-    }
-
-    print defined $context
-        ? "\nRhymes with '$word' related to '$context'\n\n}"
-        : "\nRhymes with '$word'\n\n";
-
-    for (0..$#$rhyming_words) {
-        print "\n" if $_ % $columns == 0 && $_ != 0;
-        printf("%-*s", $column_width, $rhyming_words->[$_]);
-    }
-    print "\n";
 }
 sub fetch {
     my ($self, $word, $context, $raw) = @_;
@@ -76,7 +50,7 @@ sub fetch {
         croak("context parameter must be an alpha word only.");
     }
 
-    my $req = HTTP::Request->new('GET', $self->uri($word, $context));
+    my $req = HTTP::Request->new('GET', $self->_uri($word, $context));
 
     my $response = $ua->request($req);
 
@@ -118,49 +92,6 @@ sub fetch {
         return undef;
     }
 }
-sub sort_by {
-    my ($self, $sort_by) = @_;
-
-    if (defined $sort_by) {
-        if (! grep /^$sort_by$/, qw(score_desc score_asc alpha_desc alpha_asc)) {
-            croak("sort() needs 'score_desc', 'score_asc', 'alpha_desc' or 'alpha_asc' as param");
-        }
-
-        if ($sort_by =~ /^alpha/) {
-            $self->{sort_by} =  $sort_by =~ /desc/
-                ? SORT_BY_ALPHA_DESC
-                : SORT_BY_ALPHA_ASC;
-        }
-        elsif ($sort_by =~ /^score/) {
-            $self->{sort_by} = $sort_by =~ /desc/
-                ? SORT_BY_SCORE_DESC
-                : SORT_BY_SCORE_ASC;
-        }
-    }
-
-    return $self->{sort_by} // SORT_BY_SCORE_DESC;
-}
-sub uri {
-    my ($self, $word, $context) = @_;
-
-    my $uri;
-
-    if (defined $context) {
-        $uri = sprintf(
-            "http://api.datamuse.com/words?ml=%s&rel_rhy=%s",
-            $context,
-            $word
-        );
-    } else {
-        $uri = sprintf(
-            "http://api.datamuse.com/words?rel_rhy=%s",
-            $word
-        );
-    }
-
-    print "URI: $uri\n" if $DEBUG;
-    return $uri;
-}
 sub max_results {
     my ($self, $max) = @_;
 
@@ -185,6 +116,59 @@ sub min_score {
 
     return $self->{min_score} // MIN_SCORE;
 }
+sub print {
+    my ($self, $word, $context) = @_;
+
+    my $rhyming_words = $self->fetch($word, $context);
+
+    #FIXME: Change below to hash, isolate each numSyllable arrays
+
+    my $max_word_len
+        = length((sort { length $b <=> length $a} @$rhyming_words)[0]);
+    my $column_width = $max_word_len + 3;
+
+    my $columns = $column_width > 15 ? 5 : 6;
+
+    if ($DEBUG) {
+        printf "matched word count: %d\n", scalar @$rhyming_words;
+        printf "column width: %d, column count: %d\n", $column_width, $columns;
+    }
+
+    print defined $context
+        ? "\nRhymes with '$word' related to '$context'\n\n}"
+        : "\nRhymes with '$word'\n\n";
+
+    for (0..$#$rhyming_words) {
+        print "\n" if $_ % $columns == 0 && $_ != 0;
+        printf("%-*s", $column_width, $rhyming_words->[$_]);
+    }
+    print "\n";
+}
+sub sort_by {
+    my ($self, $sort_by) = @_;
+
+    if (defined $sort_by) {
+        if (! grep /^$sort_by$/, qw(score_desc score_asc alpha_desc alpha_asc)) {
+            croak("sort() needs 'score_desc', 'score_asc', 'alpha_desc' or 'alpha_asc' as param");
+        }
+
+        if ($sort_by =~ /^alpha/) {
+            $self->{sort_by} =  $sort_by =~ /desc/
+                ? SORT_BY_ALPHA_DESC
+                : SORT_BY_ALPHA_ASC;
+        }
+        elsif ($sort_by =~ /^score/) {
+            $self->{sort_by} = $sort_by =~ /desc/
+                ? SORT_BY_SCORE_DESC
+                : SORT_BY_SCORE_ASC;
+        }
+    }
+
+    return $self->{sort_by} // SORT_BY_SCORE_DESC;
+}
+
+# Private
+
 sub _args {
     my ($self, $args) = @_;
 
@@ -205,6 +189,24 @@ sub _args {
     if (exists $args->{sort_by}) {
         $self->sort_by($args->{sort_by});
     }
+}
+sub _uri {
+    my ($self, $word, $context) = @_;
+
+    my $uri;
+
+    if (defined $context) {
+        $uri = sprintf(
+            "http://api.datamuse.com/words?ml=%s&rel_rhy=%s",
+            $context,
+            $word
+        );
+    } else {
+        $uri = sprintf("http://api.datamuse.com/words?rel_rhy=%s", $word);
+    }
+
+    print "URI: $uri\n" if $DEBUG;
+    return $uri;
 }
 sub __placeholder {}
 
