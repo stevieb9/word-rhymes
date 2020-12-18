@@ -147,6 +147,25 @@ sub min_score {
 
     return $self->{min_score} // MIN_SCORE;
 }
+sub min_syllables {
+    my ($self, $min) = @_;
+
+    if (defined $min) {
+        croak("min_syllables must be an integer") if $min !~ /^-?\d+$/;
+        if ($min < MIN_SYLLABLES || $min > MAX_SYLLABLES) {
+            croak(
+                sprintf(
+                    "min_syllables must be between %d and %d",
+                    MIN_SYLLABLES,
+                    MAX_SYLLABLES
+                )
+            );
+        }
+        $self->{min_syllables} = $min;
+    }
+
+    return $self->{min_syllables} // MIN_SYLLABLES;
+}
 sub print {
     my ($self, $word, $context) = @_;
 
@@ -200,25 +219,6 @@ sub sort_by {
 
     return $self->{sort_by} // SORT_BY_SCORE_DESC;
 }
-sub min_syllables {
-    my ($self, $min) = @_;
-
-    if (defined $min) {
-        croak("min_syllables must be an integer") if $min !~ /^-?\d+$/;
-        if ($min < MIN_SYLLABLES || $min > MAX_SYLLABLES) {
-            croak(
-                sprintf(
-                    "min_syllables must be between %d and %d",
-                    MIN_SYLLABLES,
-                    MAX_SYLLABLES
-                )
-            );
-        }
-        $self->{min_score} = $min;
-    }
-
-    return $self->{min_score} // MIN_SCORE;
-}
 
 # Private
 
@@ -226,19 +226,21 @@ sub _args {
     my ($self, $args) = @_;
 
     # max_results
-
     if (exists $args->{max_results}) {
         $self->max_results($args->{max_results});
     }
 
     # min score
-
     if (exists $args->{min_score}) {
         $self->min_score($args->{min_score});
     }
 
-    # sort by
+    # min syllables
+    if (exists $args->{min_syllables}) {
+        $self->min_syllables($args->{min_syllables});
+    }
 
+    # sort by
     if (exists $args->{sort_by}) {
         $self->sort_by($args->{sort_by});
     }
