@@ -53,9 +53,6 @@ sub new {
 sub fetch {
     my ($self, $word, $context, $raw) = @_;
 
-    print "Word: $word, Context: $context\n" if $DEBUG && defined $context;
-    print "Word: $word\n" if $DEBUG && ! defined $context;
-
     if (! defined $word) {
         croak("fetch() needs a word sent in");
     }
@@ -82,8 +79,6 @@ sub fetch {
         my @sorted = sort {$b->{numSyllables} <=> $a->{numSyllables}} @data;
         my %organized;
 
-        printf "Min score: %d\n", $self->min_score if $DEBUG;
-
         for (@sorted) {
             push @{ $organized{$_->{numSyllables}} }, $_ if $_->{score} >= $self->min_score;
         }
@@ -91,8 +86,6 @@ sub fetch {
         if (defined $raw) {
             return \%organized;
         }
-
-        printf("SORT BY: %s\n", $self->sort_by) if $DEBUG;
 
         for (keys %organized) {
             if ($self->sort_by == SORT_BY_ALPHA_DESC) {
@@ -200,11 +193,6 @@ sub print {
         my $column_width = $max_word_len + COL_PADDING;
         my $columns = $column_width > COL_DIVIDER ? MIN_NUM_COLS : MAX_NUM_COLS;
 
-        if ($DEBUG) {
-            printf "$num_syl syllables: matched word count: %d\n", scalar keys %$rhyming_words;
-            printf "column width: %d, column count: %d\n", $column_width, $columns;
-        }
-
         printf "\nSyllables: $num_syl\n\n%s", ROW_INDENT;
 
         for (0 .. $#{ $rhyming_words->{$num_syl} }) {
@@ -277,7 +265,6 @@ sub _uri {
         );
     }
 
-    print "URI: $uri\n" if $DEBUG;
     return $uri;
 }
 sub __placeholder {}
