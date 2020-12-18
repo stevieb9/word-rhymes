@@ -1,7 +1,6 @@
 use warnings;
 use strict;
 
-use Data::Dumper;
 use Test::More;
 use JSON;
 use Word::Rhymes;

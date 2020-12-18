@@ -11,8 +11,10 @@ my $j = JSON->new;
 
 # return_json
 {
+
+    ok 1;
     my $o = $mod->new;
-    print $j->pretty->encode( $o->fetch('zoo'));
+    #print $j->pretty->encode( $o->fetch('zoo'));
 }
 
 done_testing;
