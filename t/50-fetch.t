@@ -8,12 +8,12 @@ use Word::Rhymes;
 my $mod = 'Word::Rhymes';
 my $f = 't/data/zoo.data';
 
-ok 1;
-# word: zoo
+# bad params
 {
     my $o = $mod->new(file => $f);
 
-    $o->fetch('master');
+    is eval {$o->fetch; 1}, undef, "fetch() without a word croaks ok";
+    is eval {$o->fetch('zoo', '***'); 1}, undef, "fetch() with non-word context croaks ok";
 }
 
 done_testing;
