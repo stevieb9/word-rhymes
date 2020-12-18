@@ -37,6 +37,13 @@ my $mod = 'Word::Rhymes';
     like $@, qr/valid file/, "...and error is sane";
 }
 
+# no file (only for coverage purposes)
+{
+    if ($ENV{WORD_RHYMES_NO_FILE}) {
+        is ref $mod->new->fetch('zoo'), 'HASH', "no file fetches from internet ok";
+    }
+}
+
 # method
 {
     my $o = $mod->new;
