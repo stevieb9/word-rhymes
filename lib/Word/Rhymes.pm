@@ -14,10 +14,15 @@ use LWP::UserAgent;
 my $DEBUG = $ENV{WORD_RHYMES_DEBUG};
 
 use constant {
-    # Limits
+    # Core limits
     MIN_SCORE           => 0,
     MAX_SCORE           => 1000000,
+    MIN_RESULTS         => 1,
     MAX_RESULTS         => 1000,
+    MIN_SYLLABLES       => 1,
+    MAX_SYLLABLES       => 100,
+
+    # print() related
     MAX_NUM_COLS        => 8,
     MIN_NUM_COLS        => 7,
     COL_DIVIDER         => 15,
@@ -109,8 +114,14 @@ sub max_results {
 
     if (defined $max) {
         croak("max_results must be an integer") if $max !~ /^\d+$/;
-        if ($max < 1 || $max > MAX_RESULTS) {
-            croak("max_results must be between  1-1000")
+        if ($max < MIN_RESULTS || $max > MAX_RESULTS) {
+            croak(
+                sprintf(
+                    "max_results must be between %d and %d",
+                    MIN_RESULTS,
+                    MAX_RESULTS
+                )
+            );
         }
         $self->{max_results} = $max;
     }
@@ -122,8 +133,14 @@ sub min_score {
 
     if (defined $min) {
         croak("min_score must be an integer") if $min !~ /^-?\d+$/;
-        if ($min < 0 || $min > MAX_SCORE) {
-            croak("min_score must be between 0-1000000");
+        if ($min < MIN_SCORE || $min > MAX_SCORE) {
+            croak(
+                sprintf(
+                    "min_score must be between %d and %d",
+                    MIN_SCORE,
+                    MAX_SCORE
+                )
+            );
         }
         $self->{min_score} = $min;
     }
@@ -182,6 +199,25 @@ sub sort_by {
     }
 
     return $self->{sort_by} // SORT_BY_SCORE_DESC;
+}
+sub min_syllables {
+    my ($self, $min) = @_;
+
+    if (defined $min) {
+        croak("min_syllables must be an integer") if $min !~ /^-?\d+$/;
+        if ($min < MIN_SYLLABLES || $min > MAX_SYLLABLES) {
+            croak(
+                sprintf(
+                    "min_syllables must be between %d and %d",
+                    MIN_SYLLABLES,
+                    MAX_SYLLABLES
+                )
+            );
+        }
+        $self->{min_score} = $min;
+    }
+
+    return $self->{min_score} // MIN_SCORE;
 }
 
 # Private
