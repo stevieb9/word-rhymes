@@ -63,12 +63,18 @@ sub fetch {
         croak("context parameter must be an alpha word only.");
     }
 
-    my $req = HTTP::Request->new('GET', $self->_uri($word, $context));
+    my ($req, $response);
 
-    my $response = $ua->request($req);
+    if (! $self->file) {
+        $req = HTTP::Request->new('GET', $self->_uri($word, $context));
+        $response = $ua->request($req);
+    }
 
-    if ($response->is_success) {
-        my $result = decode_json $response->decoded_content;
+    if ($self->file || $response->is_success) {
+
+        my $result = $self->file
+            ? decode_json $self->file
+            : decode_json $response->decoded_content;
 
         # Dump rhyming words that don't have a score
         my @data = grep { $_->{score} } @$result;
@@ -108,6 +114,17 @@ sub fetch {
         print "Invalid response\n\n";
         return undef;
     }
+}
+sub file {
+    my ($self, $file) = @_;
+
+    if (defined $file) {
+        croak("File '$file' does not exist") if ! -e $file;
+        croak("File '$file' is not a valid file") if ! -f $file;
+        $self->{file} = $file;
+    }
+
+    return $self->{file} // '';
 }
 sub max_results {
     my ($self, $max) = @_;
@@ -225,25 +242,20 @@ sub sort_by {
 sub _args {
     my ($self, $args) = @_;
 
+    # file
+    $self->file($args->{file}) if exists $args->{file};
+
     # max_results
-    if (exists $args->{max_results}) {
-        $self->max_results($args->{max_results});
-    }
+    $self->file($args->{max_results}) if exists $args->{max_results};
 
-    # min score
-    if (exists $args->{min_score}) {
-        $self->min_score($args->{min_score});
-    }
+    # min_score
+    $self->file($args->{min_score}) if exists $args->{min_score};
 
-    # min syllables
-    if (exists $args->{min_syllables}) {
-        $self->min_syllables($args->{min_syllables});
-    }
+    # min_syllables
+    $self->file($args->{min_syllables}) if exists $args->{min_syllables};
 
-    # sort by
-    if (exists $args->{sort_by}) {
-        $self->sort_by($args->{sort_by});
-    }
+    # sort_by
+    $self->file($args->{sort_by}) if exists $args->{sort_by};
 }
 sub _uri {
     my ($self, $word, $context) = @_;
