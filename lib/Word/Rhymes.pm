@@ -7,20 +7,22 @@ our $VERSION = '0.01';
 
 use Carp qw(croak);
 use Data::Dumper;
-use JSON;
 use HTTP::Request;
+use JSON;
 use LWP::UserAgent;
 
 my $DEBUG = $ENV{WORD_RHYMES_DEBUG};
 
 use constant {
-    # Core limits
+    # Core
     MIN_SCORE           => 0,
     MAX_SCORE           => 1000000,
     MIN_RESULTS         => 1,
     MAX_RESULTS         => 1000,
     MIN_SYLLABLES       => 1,
     MAX_SYLLABLES       => 100,
+    MULTI_WORD          => 0,
+    RETURN_RAW          => 0,
 
     # print() related
     MAX_NUM_COLS        => 8,
@@ -50,13 +52,32 @@ sub new {
 
     return $self;
 }
+sub return_raw {
+    my ($self, $ret) = @_;
+
+    if (defined $ret) {
+        $self->{return_raw} = $ret;
+    }
+
+    return $self->{return_raw} // RETURN_RAW;
+}
+sub multi_word {
+    my ($self, $bool) = @_;
+
+    if (defined $bool) {
+        $self->{multi_word} = $bool;
+    }
+
+    return $self->{multi_word} // MULTI_WORD;
+}
 sub fetch {
-    my ($self, $word, $context, $raw) = @_;
+    my ($self, $word, $context) = @_;
 
     if (! defined $word) {
         croak("fetch() needs a word sent in");
     }
-    if (defined $context && $context !~ /[a..zA..Z-]/) {
+
+    if (defined $context && $context !~ /^\w+$/) {
         croak("context parameter must be an alpha word only.");
     }
 
@@ -69,22 +90,41 @@ sub fetch {
 
     if ($self->file || $response->is_success) {
 
-        my $result = $self->file
-            ? decode_json $self->file
-            : decode_json $response->decoded_content;
+        my $json;
 
-        # Dump rhyming words that don't have a score
-        my @data = grep { $_->{score} } @$result;
+        if ($self->file) {
+            {
+                local $/;
+                open my $fh, '<', $self->file or croak(
+                    sprintf("Can't open the data file '%s': $!", $self->file)
+                );
+                $json = <$fh>;
+                close $fh;
+            }
+        }
+        else {
+            $json = $response->decoded_content;
+        }
+
+        my $result = decode_json $json;
+
+        return $result if $self->return_raw;
+
+        # Dump rhyming words that don't have a score or are multi-word
+        my @data;
+
+        if ($self->multi_word) {
+            @data = grep { $_->{score} } @$result;
+        }
+        else {
+            @data = grep { $_->{score} && $_->{word} !~ /\s+/ } @$result;
+        }
 
         my @sorted = sort {$b->{numSyllables} <=> $a->{numSyllables}} @data;
         my %organized;
 
         for (@sorted) {
             push @{ $organized{$_->{numSyllables}} }, $_ if $_->{score} >= $self->min_score;
-        }
-
-        if (defined $raw) {
-            return \%organized;
         }
 
         for (keys %organized) {
@@ -230,20 +270,26 @@ sub sort_by {
 sub _args {
     my ($self, $args) = @_;
 
+    # multi_word
+    $self->multi_word($args->{multi_word}) if exists $args->{multi_word};
+
+    # return_raw
+    $self->return_raw($args->{return_raw}) if exists $args->{return_raw};
+
     # file
     $self->file($args->{file}) if exists $args->{file};
 
     # max_results
-    $self->file($args->{max_results}) if exists $args->{max_results};
+    $self->max_results($args->{max_results}) if exists $args->{max_results};
 
     # min_score
-    $self->file($args->{min_score}) if exists $args->{min_score};
+    $self->min_score($args->{min_score}) if exists $args->{min_score};
 
     # min_syllables
-    $self->file($args->{min_syllables}) if exists $args->{min_syllables};
+    $self->min_syllables($args->{min_syllables}) if exists $args->{min_syllables};
 
     # sort_by
-    $self->file($args->{sort_by}) if exists $args->{sort_by};
+    $self->sort_by($args->{sort_by}) if exists $args->{sort_by};
 }
 sub _uri {
     my ($self, $word, $context) = @_;
