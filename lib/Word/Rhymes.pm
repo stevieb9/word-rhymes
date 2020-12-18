@@ -6,6 +6,7 @@ use warnings;
 our $VERSION = '0.01';
 
 use Carp qw(croak);
+use Data::Dumper;
 use JSON;
 use HTTP::Request;
 use LWP::UserAgent;
@@ -17,6 +18,11 @@ use constant {
     MIN_SCORE           => 0,
     MAX_SCORE           => 1000000,
     MAX_RESULTS         => 1000,
+    MAX_NUM_COLS        => 8,
+    MIN_NUM_COLS        => 7,
+    COL_DIVIDER         => 15,
+    COL_PADDING         => 3,
+    ROW_INDENT          => '    ',
 
     # Sort by
     SORT_BY_SCORE_DESC  => 0x00, # Default
@@ -42,7 +48,8 @@ sub new {
 sub fetch {
     my ($self, $word, $context, $raw) = @_;
 
-    print "Word: $word, Context: $context\n" if $DEBUG;
+    print "Word: $word, Context: $context\n" if $DEBUG && defined $context;
+    print "Word: $word\n" if $DEBUG && ! defined $context;
 
     if (! defined $word) {
         croak("fetch() needs a word sent in");
@@ -56,10 +63,15 @@ sub fetch {
     my $response = $ua->request($req);
 
     if ($response->is_success) {
-        my $data = decode_json $response->decoded_content;
+        my $result = decode_json $response->decoded_content;
 
-        my @sorted = sort {$b->{numSyllables} <=> $a->{numSyllables}} @$data;
+        # Dump rhyming words that don't have a score
+        my @data = grep { $_->{score} } @$result;
+
+        my @sorted = sort {$b->{numSyllables} <=> $a->{numSyllables}} @data;
         my %organized;
+
+        printf "Min score: %d\n", $self->min_score if $DEBUG;
 
         for (@sorted) {
             push @{ $organized{$_->{numSyllables}} }, $_ if $_->{score} >= $self->min_score;
@@ -85,7 +97,6 @@ sub fetch {
                 @{ $organized{$_} } = sort {$a->{score} <=> $b->{score}} @{ $organized{$_} };
             }
         }
-
         return \%organized;
     }
     else {
@@ -112,7 +123,7 @@ sub min_score {
     if (defined $min) {
         croak("min_score must be an integer") if $min !~ /^-?\d+$/;
         if ($min < 0 || $min > MAX_SCORE) {
-            croak("min_score must be between 0-100,000,000");
+            croak("min_score must be between 0-1000000");
         }
         $self->{min_score} = $min;
     }
@@ -124,28 +135,31 @@ sub print {
 
     my $rhyming_words = $self->fetch($word, $context);
 
-    #FIXME: Change below to hash, isolate each numSyllable arrays
-
-    my $max_word_len
-        = length((sort { length $b <=> length $a} @$rhyming_words)[0]);
-    my $column_width = $max_word_len + 3;
-
-    my $columns = $column_width > 15 ? 5 : 6;
-
-    if ($DEBUG) {
-        printf "matched word count: %d\n", scalar @$rhyming_words;
-        printf "column width: %d, column count: %d\n", $column_width, $columns;
-    }
-
     print defined $context
-        ? "\nRhymes with '$word' related to '$context'\n\n}"
-        : "\nRhymes with '$word'\n\n";
+        ? "\nRhymes with '$word' related to '$context'\n"
+        : "\nRhymes with '$word'\n";
 
-    for (0..$#$rhyming_words) {
-        print "\n" if $_ % $columns == 0 && $_ != 0;
-        printf("%-*s", $column_width, $rhyming_words->[$_]);
+    for my $num_syl (reverse sort keys %$rhyming_words) {
+        my $max_word_len = length(
+            (sort {length $b->{word} <=> length $a->{word}} @{ $rhyming_words->{$num_syl} })[0]->{word}
+        );
+
+        my $column_width = $max_word_len + COL_PADDING;
+        my $columns = $column_width > COL_DIVIDER ? MIN_NUM_COLS : MAX_NUM_COLS;
+
+        if ($DEBUG) {
+            printf "$num_syl syllables: matched word count: %d\n", scalar keys %$rhyming_words;
+            printf "column width: %d, column count: %d\n", $column_width, $columns;
+        }
+
+        printf "\nSyllables: $num_syl\n\n%s", ROW_INDENT;
+
+        for (0 .. $#{ $rhyming_words->{$num_syl} }) {
+            printf "\n%s", ROW_INDENT if $_ % $columns == 0 && $_ != 0;
+            printf("%-*s", $column_width, $rhyming_words->{$num_syl}[$_]->{word});
+        }
+        print "\n";
     }
-    print "\n";
 }
 sub sort_by {
     my ($self, $sort_by) = @_;

@@ -72,9 +72,7 @@ my $mod = 'Word::Rhymes';
 
     like $@, qr/must be between/, "...and error is sane";
 
-    done_testing; exit;
-
-    for (1..1,000,000) {
+    for (1..500, 10000..11000, 999900..1000000) {
         is $o->min_score($_), $_, "min_score with $_ ok";
     }
 }
