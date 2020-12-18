@@ -36,17 +36,28 @@ my $mod = 'Word::Rhymes';
 {
     # no multi_word (default)
     {
-        my $o = $mod->new;
+        my $data = $mod->new(file => 't/data/zoo.data')->fetch('zoo');
 
         my $c;
-
-        my $data = $o->fetch('zoo');
 
         for my $syl (keys %$data) {
             $c += scalar @{ $data->{$syl} };
         }
 
-        print "count: $c\n";
+        is $c, 383, "without multi_word, word count ok";
+    }
+
+    # multi_word
+    {
+        my $data = $mod->new(file => 't/data/zoo.data', multi_word => 1)->fetch('zoo');
+
+        my $c;
+
+        for my $syl (keys %$data) {
+            $c += scalar @{ $data->{$syl} };
+        }
+
+        is $c, 699, "with multi_word, word count ok";
     }
 }
 
