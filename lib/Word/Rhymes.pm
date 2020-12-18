@@ -15,7 +15,7 @@ my $DEBUG = $ENV{WORD_RHYMES_DEBUG};
 use constant {
     # Limits
     MIN_SCORE           => 0,
-    MAX_RESULTS         => 0,
+    MAX_RESULTS         => 1000,
 
     # Sort by
     SORT_BY_SCORE_DESC  => 0x00, # Default
@@ -97,8 +97,9 @@ sub max_results {
 
     if (defined $max) {
         croak("max_results must be an integer") if $max !~ /^\d+$/;
-        croak("max_results must be greater than zero") if $max < 0;
-
+        if ($max < 1 || $max > MAX_RESULTS) {
+            croak("max_results must be between  1-1000")
+        }
         $self->{max_results} = $max;
     }
 
@@ -197,12 +198,17 @@ sub _uri {
 
     if (defined $context) {
         $uri = sprintf(
-            "http://api.datamuse.com/words?ml=%s&rel_rhy=%s",
+            "http://api.datamuse.com/words?max=%d&ml=%s&rel_rhy=%s",
+            MAX_RESULTS,
             $context,
             $word
         );
     } else {
-        $uri = sprintf("http://api.datamuse.com/words?rel_rhy=%s", $word);
+        $uri = sprintf(
+            "http://api.datamuse.com/words?max=%d&rel_rhy=%s",
+            MAX_RESULTS,
+            $word
+        );
     }
 
     print "URI: $uri\n" if $DEBUG;
