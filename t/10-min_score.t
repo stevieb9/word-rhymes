@@ -1,8 +1,9 @@
 use warnings;
 use strict;
 
+use Data::Dumper;
 use Test::More;
-
+use JSON;
 use Word::Rhymes;
 
 my $mod = 'Word::Rhymes';
@@ -77,4 +78,56 @@ my $mod = 'Word::Rhymes';
     }
 }
 
+# check data
+{
+    my $j;
+    {
+        local $/;
+        open my $fh, '<', 't/data/zoo.data' or die $!;
+        $j = <$fh>;
+    }
+
+    my $p = decode_json $j;
+
+    is scalar @$p, 803, "number of original matches ok";
+
+    my $o = $mod->new(file => 't/data/zoo.data');
+
+    is get_count($o), 383, "default min_score count ok";
+
+    $o->min_score(100);
+    is get_count($o), 278, "min_score 100 count ok";
+
+    $o->min_score(500);
+    is get_count($o), 147, "min_score 500 count ok";
+
+    $o->min_score(1000);
+    is get_count($o), 73, "min_score 1000 count ok";
+
+    $o->min_score(2000);
+    is get_count($o), 21, "min_score 2000 count ok";
+
+    $o->min_score(3000);
+    is get_count($o), 11, "min_score 3000 count ok";
+
+    $o->min_score(5000);
+    is get_count($o), 4, "min_score 5000 count ok";
+
+    $o->min_score(10000);
+    is get_count($o), 1, "min_score 10000 count ok";
+}
+
+sub get_count {
+    my ($o) = @_;
+
+    my $data = $o->fetch('zoo');
+
+    my $count = 0;
+
+    for my $syl (keys %$data) {
+        $count += scalar @{ $data->{$syl} };
+    }
+
+    return $count;
+}
 done_testing;
