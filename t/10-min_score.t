@@ -14,7 +14,7 @@ my $mod = 'Word::Rhymes';
 # new param default
 {
     my $o = $mod->new;
-    is $o->min_score, 300, "default min_score ok";
+    is $o->min_score, 0, "default min_score ok";
 }
 
 # new param wrong type
@@ -30,9 +30,9 @@ my $mod = 'Word::Rhymes';
 # new param too high
 {
     is
-        eval {$mod->new(min_score => 301); 1},
+        eval {$mod->new(min_score => 1000001); 1},
         undef,
-        'min_score param croaks if over 300 ok';
+        'min_score param croaks if over 1,000,000 ok';
 
     like $@, qr/min_score must be between/, "...and error is sane";
 }
@@ -40,9 +40,9 @@ my $mod = 'Word::Rhymes';
 # new param too low
 {
     is
-        eval {$mod->new(min_score => 0); 1},
+        eval {$mod->new(min_score => -1); 1},
         undef,
-        'min_score param croaks if under 1 ok';
+        'min_score param croaks if under 0 ok';
 
     like $@, qr/min_score must be between/, "...and error is sane";
 }
@@ -59,21 +59,22 @@ my $mod = 'Word::Rhymes';
     like $@, qr/min_score must be an integer/, "...and error is sane";
 
     is
-        eval {$o->min_score(0); 1},
+        eval {$o->min_score(-1); 1},
         undef,
-        "min_score() croaks if param < 1 ok";
+        "min_score() croaks if param < 0 ok";
 
     like $@, qr/must be between/, "...and error is sane";
 
     is
-        eval {$o->min_score(301); 1},
+        eval {$o->min_score(1000001); 1},
         undef,
-        "min_score() croaks if param > 300 ok";
+        "min_score() croaks if param > 1,000,000 ok";
 
     like $@, qr/must be between/, "...and error is sane";
 
     done_testing; exit;
-    for (1..300) {
+
+    for (1..1,000,000) {
         is $o->min_score($_), $_, "min_score with $_ ok";
     }
 }

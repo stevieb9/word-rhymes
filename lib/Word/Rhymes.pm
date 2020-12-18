@@ -15,6 +15,7 @@ my $DEBUG = $ENV{WORD_RHYMES_DEBUG};
 use constant {
     # Limits
     MIN_SCORE           => 0,
+    MAX_SCORE           => 1000000,
     MAX_RESULTS         => 1000,
 
     # Sort by
@@ -109,9 +110,10 @@ sub min_score {
     my ($self, $min) = @_;
 
     if (defined $min) {
-        croak("min_score must be an integer") if $min !~ /^\d+$/;
-        croak("min_score must be greater than zero") if $min < 1;
-
+        croak("min_score must be an integer") if $min !~ /^-?\d+$/;
+        if ($min < 0 || $min > MAX_SCORE) {
+            croak("min_score must be between 0-100,000,000");
+        }
         $self->{min_score} = $min;
     }
 
