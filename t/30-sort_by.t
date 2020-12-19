@@ -68,6 +68,8 @@ my $w = 'zoo';
     my $o = $mod->new(file => $f);
     my $d;
 
+    is eval { $o->sort_by('blah'); 1 }, undef, "bad param croaks ok";
+
     $o->sort_by('score_asc');
 
     is $o->sort_by, SORT_BY_SCORE_ASC, "alpha_asc set via method ok";
