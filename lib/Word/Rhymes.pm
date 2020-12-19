@@ -357,7 +357,7 @@ words returned etc.
 
     # Simply display the output
 
-    $wr->print('disdain', 'farm');
+    $wr->print('disdain');
 
     # Print all matching rhyming words that have three syllables
 
