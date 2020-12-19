@@ -1,7 +1,7 @@
 Revision history for Word-Rhymes
 
 1.02 UNREL
-        -
+        - Changed B<> tags to I<> tags in binary POD
 
 1.01    2020-12-19
         - POD cleanup; Removed bolding of certain words in sub descriptions

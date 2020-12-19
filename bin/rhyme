@@ -78,7 +78,7 @@ Display the usage screen.
 
 Sorts the output prior to displaying it.
 
-B<Valid values>:
+I<Valid values>:
 
     score_desc
 
@@ -96,46 +96,46 @@ Sorts the words alphabetically, descending (eg. a-z).
 
 Sorts the words alphabetically, ascending (eg. z-a).
 
-B<Default>: score_desc
+I<Default>: score_desc
 
 =head2 -s|--syllables
 
 We will only display words that have this many or more syllables.
 
-B<Valid values>:
+I<Valid values>:
 
     1-100
 
-B<Default>: 1
+I<Default>: 1
 
 =head2 -S|--score
 
 We will only display rhyming words with a score equal to or greater than this.
 
-B<Valid values>:
+I<Valid values>:
 
     0-1000000
 
-B<Default>: 0
+I<Default>: 0
 
 =head2 -r|--results
 
 How many rhyming word objects we'll fetch over the Internet.
 
-B<Valid values>:
+I<Valid values>:
 
     1-1000
 
-B<Default>: 1000
+I<Default>: 1000
 
 =head2 -m|--multi
 
 Some rhyming words are actually multi-word phrases. Set this flag to have us
 display them. By default we don't.
 
-B<Valid values>: None, this is only a flag.
+I<Valid values>: None, this is only a flag.
 
-B<Default>: False/Disabled
+I<Default>: False/Disabled
 
 =head1 AUTHOR
 
