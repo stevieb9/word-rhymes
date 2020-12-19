@@ -301,14 +301,15 @@ sub _uri {
     if (defined $context) {
         $uri = sprintf(
             "http://api.datamuse.com/words?max=%d&ml=%s&rel_rhy=%s",
-            MAX_RESULTS,
+            $self->max_results,
             $context,
             $word
         );
-    } else {
+    }
+    else {
         $uri = sprintf(
             "http://api.datamuse.com/words?max=%d&rel_rhy=%s",
-            MAX_RESULTS,
+            $self->max_results,
             $word
         );
     }

@@ -77,4 +77,39 @@ my $mod = 'Word::Rhymes';
     }
 }
 
+# count
+{
+    if ($ENV{RELEASE_TESTING} || $ENV{WORD_RHYMES_INTERNET}) {
+
+        my $o = $mod->new;
+
+        # default
+        {
+            my $d = $o->fetch('zoo');
+
+            my $count = 0;
+
+            for my $syl (keys %$d) {
+                $count += scalar @{$d->{$syl}};
+            }
+
+            is $count > 300, 1, "max_results default count ok";
+        }
+
+        # 100
+        {
+            $o->max_results(100);
+
+            my $d = $o->fetch('zoo');
+
+            my $count = 0;
+
+            for my $syl (keys %$d) {
+                $count += scalar @{$d->{$syl}};
+            }
+
+            is $count, 100, "max_results 100 count ok";
+        }
+    }
+}
 done_testing;
