@@ -89,41 +89,7 @@ sub fetch {
 
         return $result if $self->return_raw;
 
-        my @data;
-
-        # Dump rhyming words that don't have a score or are multi-word
-        if ($self->multi_word) {
-            @data = grep { $_->{score} } @$result;
-        }
-        else {
-            @data = grep { $_->{score} && $_->{word} !~ /\s+/ } @$result;
-        }
-
-        # Dump rhyming words that are outside of min_syllables threshold
-        @data = grep { $_->{numSyllables} >= $self->min_syllables } @data;
-
-        my @sorted = sort {$b->{numSyllables} <=> $a->{numSyllables}} @data;
-        my %organized;
-
-        for (@sorted) {
-            push @{ $organized{$_->{numSyllables}} }, $_ if $_->{score} >= $self->min_score;
-        }
-
-        for (keys %organized) {
-            if ($self->sort_by == SORT_BY_ALPHA_DESC) {
-                @{ $organized{$_} } = sort {$b->{word} cmp $a->{word}} @{ $organized{$_} };
-            }
-            elsif ($self->sort_by == SORT_BY_ALPHA_ASC) {
-                @{ $organized{$_} } = sort {$a->{word} cmp $b->{word}} @{ $organized{$_} };
-            }
-            elsif ($self->sort_by == SORT_BY_SCORE_DESC) {
-                @{ $organized{$_} } = sort {$b->{score} <=> $a->{score}} @{ $organized{$_} };
-            }
-            elsif ($self->sort_by == SORT_BY_SCORE_ASC) {
-                @{ $organized{$_} } = sort {$a->{score} <=> $b->{score}} @{ $organized{$_} };
-            }
-        }
-        return \%organized;
+        return $self->_process($result);
     }
     else {
         print "Invalid response\n\n";
@@ -293,6 +259,46 @@ sub _args {
     # sort_by
     $self->sort_by($args->{sort_by}) if exists $args->{sort_by};
 }
+sub _process {
+    my ($self, $result) = @_;
+
+    my @data;
+
+    # Dump rhyming words that don't have a score or are multi-word
+    if ($self->multi_word) {
+        @data = grep { $_->{score} } @$result;
+    }
+    else {
+        @data = grep { $_->{score} && $_->{word} !~ /\s+/ } @$result;
+    }
+
+    # Dump rhyming words that are outside of min_syllables threshold
+    @data = grep { $_->{numSyllables} >= $self->min_syllables } @data;
+
+    my @sorted = sort {$b->{numSyllables} <=> $a->{numSyllables}} @data;
+    my %organized;
+
+    for (@sorted) {
+        push @{ $organized{$_->{numSyllables}} }, $_ if $_->{score} >= $self->min_score;
+    }
+
+    for (keys %organized) {
+        if ($self->sort_by == SORT_BY_ALPHA_DESC) {
+            @{ $organized{$_} } = sort {$b->{word} cmp $a->{word}} @{ $organized{$_} };
+        }
+        elsif ($self->sort_by == SORT_BY_ALPHA_ASC) {
+            @{ $organized{$_} } = sort {$a->{word} cmp $b->{word}} @{ $organized{$_} };
+        }
+        elsif ($self->sort_by == SORT_BY_SCORE_DESC) {
+            @{ $organized{$_} } = sort {$b->{score} <=> $a->{score}} @{ $organized{$_} };
+        }
+        elsif ($self->sort_by == SORT_BY_SCORE_ASC) {
+            @{ $organized{$_} } = sort {$a->{score} <=> $b->{score}} @{ $organized{$_} };
+        }
+    }
+    return \%organized;
+
+}
 sub _uri {
     my ($self, $word, $context) = @_;
 
@@ -326,8 +332,8 @@ __END__
 Word::Rhymes - Takes a word and fetches rhyming matches from RhymeZone.com
 
 =for html
-<a href="http://travis-ci.com/stevieb9/words-rhyme"><img src="https://www.travis-ci.com/stevieb9/words-rhyme.svg?branch=master"/>
-<a href='https://coveralls.io/github/stevieb9/words-rhyme?branch=master'><img src='https://coveralls.io/repos/stevieb9/words-rhyme/badge.svg?branch=master&service=github' alt='Coverage Status' /></a>
+<a href="http://travis-ci.com/stevieb9/word-rhymes"><img src="https://www.travis-ci.com/stevieb9/word-rhymes.svg?branch=master"/>
+<a href='https://coveralls.io/github/stevieb9/word-rhymes?branch=master'><img src='https://coveralls.io/repos/stevieb9/word-rhymes/badge.svg?branch=master&service=github' alt='Coverage Status' /></a>
 
 =head1 DESCRIPTION
 
@@ -362,14 +368,9 @@ words returned etc.
 
     $rhyming_words = $wr->fetch('disdain', 'farm');
 
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
 =head1 METHODS
 
-=head2 new(%args)
+=head2 new
 
 Instantiates and returns a new L<< Word::Rhymes >> object.
 
@@ -587,6 +588,21 @@ B<Returns>: Integer, the currently set value:
     ascii_asc:      0x03
 
 B<Returns>: Bool, the currently set value.
+
+=head1 PRIVATE METHODS
+
+=head2 _args
+
+Handles the processing of parameters sent into L</new>. See that documentation
+for details on the various valid parameters.
+
+=head2 _process
+
+Called by L</fetch>, processes the data retrieved from RhymeZone.com.
+
+=head2 _uri
+
+Generates and returns the appropriate URL for the RhymeZone.com REST API.
 
 =head1 AUTHOR
 
