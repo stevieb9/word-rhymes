@@ -441,6 +441,8 @@ Returns: A hash reference where the keys are the number of syllables in the
 rhyming words, and the values are array reference with the ordered data
 structure containing the word, the number of syllables and the score.
 
+See L</EXAMPLE OUTPUT> for a real world example.
+
 =head2 print
 
 This method will display to the screen instead of returning results which is
@@ -605,6 +607,75 @@ Called by L</fetch>, processes the data retrieved from RhymeZone.com.
 =head2 _uri
 
 Generates and returns the appropriate URL for the RhymeZone.com REST API.
+
+=head2 EXAMPLE OUTPUT
+
+    use warnings;
+    use strict;
+
+    use Data::Dumper;
+    use Words::Rhyme;
+
+    my $wr->new;
+
+    print Dumper $wr->fetch('organize');
+
+    # Several entries snipped for brevity
+
+    $VAR1 = {
+        '5' => [
+            {
+                'score' => 778,
+                'word' => 'materialize',
+                'numSyllables' => 5
+            },
+            {
+                'numSyllables' => 5,
+                'score' => 399,
+                'word' => 'compartmentalize'
+            },
+        ],
+        '2' => [
+            {
+                'numSyllables' => 2,
+                'word' => 'arise',
+                'score' => 36368
+            },
+            {
+                'numSyllables' => 2,
+                'score' => 3444,
+                'word' => 'advise'
+            },
+        ],
+        '7' => [
+            {
+                'numSyllables' => 7,
+                'word' => 'deinstitutionalize',
+                'score' => 81
+            }
+        ],
+        '3' => [
+            {
+                'score' => 3888,
+                'word' => 'analyze',
+                'numSyllables' => 3
+            },
+        ],
+        '4' => [
+            {
+                'score' => 1547,
+                'word' => 'apologize',
+                'numSyllables' => 4
+            },
+        ],
+        '1' => [
+            {
+                'score' => 3483,
+                'word' => 'rise',
+                'numSyllables' => 1
+            },
+        ]
+    };
 
 =head1 AUTHOR
 
