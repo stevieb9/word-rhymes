@@ -20,6 +20,8 @@ use constant {
     MAX_SYLLABLES       => 100,
     MULTI_WORD          => 0,
     RETURN_RAW          => 0,
+    MIN_LIMIT           => 1,
+    MAX_LIMIT           => 1000,
 
     # print() related
     MAX_NUM_COLS        => 8,
@@ -106,6 +108,25 @@ sub file {
     }
 
     return $self->{file} // '';
+}
+sub limit {
+    my ($self, $limit) = @_;
+
+    if (defined $limit) {
+        croak("limit must be an integer") if $limit !~ /^\d+$/;
+        if ($limit < MIN_LIMIT || $limit > MAX_LIMIT) {
+            croak(
+                sprintf(
+                    "limit must be between %d and %d",
+                    MIN_LIMIT,
+                    MAX_LIMIT
+                )
+            );
+        }
+        $self->{limit} = $limit;
+    }
+
+    return $self->{limit} // MAX_LIMIT;
 }
 sub max_results {
     my ($self, $max) = @_;
@@ -241,6 +262,9 @@ sub _args {
     # file
     $self->file($args->{file}) if exists $args->{file};
 
+    # limit
+    $self->limit($args->{limit}) if exists $args->{limit};
+
     # max_results
     $self->max_results($args->{max_results}) if exists $args->{max_results};
 
@@ -296,6 +320,14 @@ sub _process {
             @{ $organized{$_} } = sort {$a->{score} <=> $b->{score}} @{ $organized{$_} };
         }
     }
+
+    # Limit the result count in each syllable href
+
+    for (keys %organized) {
+        next if scalar @{ $organized{$_} } <= $self->limit;
+        @{ $organized{$_} } = @{ $organized{$_} }[0..$self->limit -1];
+    }
+
     return \%organized;
 
 }
@@ -479,6 +511,24 @@ Optional, String: The name of a pre-existing file.
 I<Default>: Empty string.
 
 I<Returns>: The name of the file if set, empty string otherwise.
+
+=head2 limit
+
+Sets the maximum number of rhyming words to return/display under each number of
+syllables section. This filtering takes place after all other sorting has
+occurred.
+
+I<Parameters>:
+
+    $limit
+
+The maximum number of rhyming words to return per each syllable count section.
+
+I<Valid values>: 1-1000
+
+I<Default>: 1000
+
+I<Returns>: The currently set value.
 
 =head2 max_results
 

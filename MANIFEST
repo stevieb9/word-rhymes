@@ -20,6 +20,7 @@ t/35-mock.t
 t/40-print.t
 t/45-uri.t
 t/50-fetch.t
+t/55-limit.t
 t/data/print.data
 t/data/zoo.data
 t/data/zoo_farm.data
