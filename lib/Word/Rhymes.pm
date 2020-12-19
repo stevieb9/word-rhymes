@@ -376,7 +376,7 @@ See L<rhyme|https://metacpan.org/pod/distribution/Word-Rhymes/bin/rhyme>
 
 Instantiates and returns a new L<< Word::Rhymes >> object.
 
-Parameters
+I<Parameters>:
 
 All parameters are passed in within a hash, and are every one of them optional.
 
@@ -419,13 +419,13 @@ See L</return_raw>.
 Sort by C<score_desc> (default), C<score_asc>, C<alpha_asc> or C<alpha_desc>.
 See L</sort_by>.
 
-Returns: L<Word::Rhymes> object.
+I<Returns>: L<Word::Rhymes> object.
 
 =head2 fetch
 
 Performs the fetching of the rhyming words.
 
-Parameters:
+I<Parameters>:
 
     $word
 
@@ -437,7 +437,7 @@ Optional, String: This word is used to surround the rhyming words with
 context. For example, if C<$word> is C<animal> and C<$context> is C<zoo>, we'll
 fetch words that rhyme with animal but that are only related to a zoo somehow.
 
-Returns: A hash reference where the keys are the number of syllables in the
+I<Returns>: A hash reference where the keys are the number of syllables in the
 rhyming words, and the values are array reference with the ordered data
 structure containing the word, the number of syllables and the score.
 
@@ -448,7 +448,7 @@ See L</EXAMPLE OUTPUT (fetch())> for a real world example.
 This method will display to the screen instead of returning results which is
 what L</fetch> is used for.
 
-Parameters:
+I<Parameters>:
 
     $word
 
@@ -460,7 +460,7 @@ Optional, String: This word is used to surround the rhyming words with
 context. For example, if C<$word> is C<animal> and C<$context> is C<zoo>, we'll
 fetch words that rhyme with animal but that are only related to a zoo somehow.
 
-Returns: 0 upon success.
+I<Returns>: 0 upon success.
 
 See L</EXAMPLE OUTPUT (print())> for a real world example.
 
@@ -469,59 +469,59 @@ See L</EXAMPLE OUTPUT (print())> for a real world example.
 Used primarily for development and testing, allows you to skip fetching results
 from the Internet, and instead fetches the data from a pre-saved file.
 
-Parameters:
+I<Parameters>:
 
     $file
 
 Optional, String: The name of a pre-existing file.
 
-Default: Empty string.
+I<Default>: Empty string.
 
-Returns: The name of the file if set, empty string otherwise.
+I<Returns>: The name of the file if set, empty string otherwise.
 
 =head2 max_results
 
 Sets the maximum number of rhyming words to fetch over the Internet.
 
-Parameters:
+I<Parameters>:
 
     $max
 
 Optional, Integer: An integer in the range of 1-1000.
 
-Default>: 1000
+I<Default>: 1000
 
-Returns: Integer, the currently set value.
+I<Returns>: Integer, the currently set value.
 
 =head2 min_score
 
 We will only return rhyming words with a score higher than the number set here.
 
-Parameters:
+I<Parameters>:
 
     $min
 
 Optional, Integer: An integer in the range of 0-1000000.
 
-<Default: 0
+I<Default>: 0
 
-Returns: Integer, the currently set value.
+I<Returns>: Integer, the currently set value.
 
 =head2 min_syllables
 
 We will only return rhyming words with a syllable count equal to or higher than
 the number set here.
 
-Parameters:
+I<Parameters>:
 
     $min
 
 Optional, Integer: An integer in the range of 1-100 (yeah, I haven't heard
 of a word with 100 syllables either, but I digress).
 
-Default: 1
+I<Default>: 1
 
-Returns: Integer, the currently set value.
+I<Returns>: Integer, the currently set value.
 
 =head2 multi_word
 
@@ -529,32 +529,32 @@ Some rhyming words are actually multi-word phrases. By default, we skip over
 these. Set this to a true value to have the multi worded rhyming words included
 in the results.
 
-Parameters:
+I<Parameters>:
 
     $bool
 
 Optional, Bool: Set to true to include multi-words, and false to skip over
 them.
 
-Default: 0 (false)
+I<Default>: 0 (false)
 
-Returns: Bool, the currently set value.
+I<Returns>: Bool, the currently set value.
 
 =head2 return_raw
 
 Used primarily for development and testing. Set to true to have L</fetch>
 return the results as they were received, prior to any other processing.
 
-Parameters:
+I<Parameters>:
 
     $bool
 
 Optional, Bool: Set to true to have the results returned before any
 processing occurs.
 
-Default: 0 (false)
+I<Default>: 0 (false)
 
-Returns: Bool, the currently set value.
+I<Returns>: Bool, the currently set value.
 
 =head2 sort_by
 
