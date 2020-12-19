@@ -120,6 +120,16 @@ I<Valid values>:
 
 I<Default>: 0
 
+=head2 -l|--limit
+
+Limits the number of rhyming words displayed under each syllable section.
+
+I<Valid values>:
+
+    1-1000
+
+I<Default>: 1000
+
 =head2 -r|--results
 
 How many rhyming word objects we'll fetch over the Internet.
