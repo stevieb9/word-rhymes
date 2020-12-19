@@ -331,6 +331,11 @@ Word::Rhymes - Takes a word and fetches rhyming matches from RhymeZone.com
 
 =head1 DESCRIPTION
 
+This distribution has installed a pre-written binary application for ease of
+use. Please see the
+L<rhyme|https://metacpan.org/pod/distribution/Word-Rhymes/bin/rhyme>
+documentation for full details.
+
 Provides the ability to fetch words that rhyme with a word, while allowing for
 context if desired (eg. find all words that rhyme with baseball that relate
 to breakfast).

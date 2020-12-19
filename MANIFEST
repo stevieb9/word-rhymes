@@ -1,3 +1,4 @@
+bin/rhyme
 Changes
 lib/Word/Rhymes.pm
 Makefile.PL
