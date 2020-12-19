@@ -593,8 +593,6 @@ I<Returns>: Integer, the currently set value:
     ascii_desc:     0x02
     ascii_asc:      0x03
 
-I<Returns>: Bool, the currently set value.
-
 =head1 PRIVATE METHODS
 
 =head2 _args
