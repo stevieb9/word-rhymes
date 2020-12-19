@@ -31,4 +31,5 @@ my $f = 't/data/zoo.data';
     my $raw = $o->fetch('zoo');
     is ref $raw, 'ARRAY', "with return_raw (method), data type is ARRAY ok";
 }
+
 done_testing;
