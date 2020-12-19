@@ -110,15 +110,18 @@ sub fetch {
 
         return $result if $self->return_raw;
 
-        # Dump rhyming words that don't have a score or are multi-word
         my @data;
 
+        # Dump rhyming words that don't have a score or are multi-word
         if ($self->multi_word) {
             @data = grep { $_->{score} } @$result;
         }
         else {
             @data = grep { $_->{score} && $_->{word} !~ /\s+/ } @$result;
         }
+
+        # Dump rhyming words that are outside of min_syllables threshold
+        @data = grep { $_->{numSyllables} >= $self->min_syllables } @data;
 
         my @sorted = sort {$b->{numSyllables} <=> $a->{numSyllables}} @data;
         my %organized;

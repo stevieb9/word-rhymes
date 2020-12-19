@@ -77,4 +77,23 @@ my $mod = 'Word::Rhymes';
     }
 }
 
+# data
+{
+    my $o = $mod->new(file => 't/data/zoo.data');
+
+    is keys %{ $o->fetch('zoo') }, 5, "default min_syllables ok";
+
+    $o->min_syllables(4);
+    is keys %{ $o->fetch('zoo') }, 2, "min_syllables set to '4' ok";
+
+    $o->min_syllables(3);
+    is keys %{ $o->fetch('zoo') }, 3, "min_syllables set to '3' ok";
+
+    $o->min_syllables(2);
+    is keys %{ $o->fetch('zoo') }, 4, "min_syllables set to '2' ok";
+
+    $o->min_syllables(1);
+    is keys %{ $o->fetch('zoo') }, 5, "min_syllables set to '1' ok";
+}
+
 done_testing;
