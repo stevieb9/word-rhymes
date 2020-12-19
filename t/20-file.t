@@ -30,11 +30,16 @@ my $mod = 'Word::Rhymes';
 # file isn't a file
 {
     is
-        eval {$mod->new(file => 'lib/'); 1},
+        eval {
+            $mod->new(file => 'lib/');
+            1
+        },
         undef,
         "file isn't a file fails ok";
 
-    like $@, qr/valid file/, "...and error is sane";
+    if ($^O !~ /win/) {
+        like $@, qr/valid file/, "...and error is sane";
+    }
 }
 
 # no file (only for coverage purposes)
