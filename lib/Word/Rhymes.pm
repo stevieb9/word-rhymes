@@ -344,6 +344,10 @@ words returned etc.
 
     my $wr = Word::Rhymes->new;
 
+    # Simply display the output
+
+    $wr->print('disdain', 'farm');
+
     # Print all matching rhyming words that have three syllables
 
     my $rhyming_words = $wr->fetch('disdain');
@@ -352,10 +356,6 @@ words returned etc.
     # With context (rhymes with 'disdain', but only words relating to 'farm')
 
     $rhyming_words = $wr->fetch('disdain', 'farm');
-
-    # Simply display the output
-
-    $wr->print('disdain', 'farm');
 
 =head1 EXPORT
 
