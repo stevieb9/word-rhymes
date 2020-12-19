@@ -337,17 +337,19 @@ Word::Rhymes - Takes a word and fetches rhyming matches from RhymeZone.com
 
 =head1 DESCRIPTION
 
-This distribution has installed a pre-written binary application for ease of
-use. Please see the
-L<rhyme|https://metacpan.org/pod/distribution/Word-Rhymes/bin/rhyme>
-documentation for full details.
-
 Provides the ability to fetch words that rhyme with a word, while allowing for
 context if desired (eg. find all words that rhyme with baseball that relate
 to breakfast).
 
 Ability to change sort order, minimum rhyme match score, maximum number of
 words returned etc.
+
+=head1 BINARY APPLICATION
+
+We've conveniently installed a pre-written program that uses this library to
+get you up and running right away.
+
+See L<rhyme|https://metacpan.org/pod/distribution/Word-Rhymes/bin/rhyme>
 
 =head1 SYNOPSIS
 
@@ -423,19 +425,19 @@ B<Returns>: L<Word::Rhymes> object.
 
 Performs the fetching of the rhyming words.
 
-B<Parameters>
+Parameters:
 
     $word
 
-B<Mandatory, String>: The word that'll be used to find rhyming matches to.
+Mandatory, String: The word that'll be used to find rhyming matches to.
 
     $context
 
-B<Optional, String>: This word is used to surround the rhyming words with
+Optional, String: This word is used to surround the rhyming words with
 context. For example, if C<$word> is C<animal> and C<$context> is C<zoo>, we'll
 fetch words that rhyme with animal but that are only related to a zoo somehow.
 
-B<Returns>: A hash reference where the keys are the number of syllables in the
+Returns: A hash reference where the keys are the number of syllables in the
 rhyming words, and the values are array reference with the ordered data
 structure containing the word, the number of syllables and the score.
 
@@ -444,78 +446,78 @@ structure containing the word, the number of syllables and the score.
 This method will display to the screen instead of returning results which is
 what L</fetch> is used for.
 
-B<Parameters>
+Parameters:
 
     $word
 
-B<Mandatory, String>: The word that'll be used to find rhyming matches to.
+Mandatory, String: The word that'll be used to find rhyming matches to.
 
     $context
 
-B<Optional, String>: This word is used to surround the rhyming words with
+Optional, String: This word is used to surround the rhyming words with
 context. For example, if C<$word> is C<animal> and C<$context> is C<zoo>, we'll
 fetch words that rhyme with animal but that are only related to a zoo somehow.
 
-B<Returns>: 0 upon success.
+Returns: 0 upon success.
 
 =head2 file
 
 Used primarily for development and testing, allows you to skip fetching results
 from the Internet, and instead fetches the data from a pre-saved file.
 
-B<Parameters>
+Parameters:
 
     $file
 
-B<Optional, String>: The name of a pre-existing file.
+Optional, String: The name of a pre-existing file.
 
-B<Default>: Empty string.
+Default: Empty string.
 
-B<Returns>: The name of the file if set, empty string otherwise.
+Returns: The name of the file if set, empty string otherwise.
 
 =head2 max_results
 
 Sets the maximum number of rhyming words to fetch over the Internet.
 
-B<Parameters>
+Parameters:
 
     $max
 
-B<Optional, Integer>: An integer in the range of 1-1000.
+Optional, Integer: An integer in the range of 1-1000.
 
-B<Default>: 1000
+Default>: 1000
 
-B<Returns>: Integer, the currently set value.
+Returns: Integer, the currently set value.
 
 =head2 min_score
 
 We will only return rhyming words with a score higher than the number set here.
 
-B<Parameters>
+Parameters:
 
     $min
 
-B<Optional, Integer>: An integer in the range of 0-1000000.
+Optional, Integer: An integer in the range of 0-1000000.
 
-B<Default>: 0
+<Default: 0
 
-B<Returns>: Integer, the currently set value.
+Returns: Integer, the currently set value.
 
 =head2 min_syllables
 
 We will only return rhyming words with a syllable count equal to or higher than
 the number set here.
 
-B<Parameters>
+Parameters:
 
     $min
 
-B<Optional, Integer>: An integer in the range of 1-100 (yeah, I haven't heard
+Optional, Integer: An integer in the range of 1-100 (yeah, I haven't heard
 of a word with 100 syllables either, but I digress).
 
-B<Default>: 1
+Default: 1
 
-B<Returns>: Integer, the currently set value.
+Returns: Integer, the currently set value.
 
 =head2 multi_word
 
@@ -523,43 +525,43 @@ Some rhyming words are actually multi-word phrases. By default, we skip over
 these. Set this to a true value to have the multi worded rhyming words included
 in the results.
 
-B<Parameters>
+Parameters:
 
     $bool
 
-B<Optional, Bool>: Set to true to include multi-words, and false to skip over
+Optional, Bool: Set to true to include multi-words, and false to skip over
 them.
 
-B<Default>: 0 (false)
+Default: 0 (false)
 
-B<Returns>: Bool, the currently set value.
+Returns: Bool, the currently set value.
 
 =head2 return_raw
 
 Used primarily for development and testing. Set to true to have L</fetch>
 return the results as they were received, prior to any other processing.
 
-B<Parameters>
+Parameters:
 
     $bool
 
-B<Optional, Bool>: Set to true to have the results returned before any
+Optional, Bool: Set to true to have the results returned before any
 processing occurs.
 
-B<Default>: 0 (false)
+Default: 0 (false)
 
-B<Returns>: Bool, the currently set value.
+Returns: Bool, the currently set value.
 
 =head2 sort_by
 
 This method allows you to modify the sorting of the rhyming words prior to
 them being returned.
 
-B<Parameters>
+I<Parameters>:
 
     $sort_order
 
-B<Optional, String>: The values for the parameter are as such:
+Optional, String: The values for the parameter are as such:
 
     score_desc
 
@@ -578,16 +580,16 @@ Return the rhyming words in alphabetical descending order (ie. a-z).
 
 Return the rhyming words in alphabetical ascending order (ie. z-a).
 
-B<Default>: C<score_desc> (0x00).
+I<Default>: C<score_desc> (0x00).
 
-B<Returns>: Integer, the currently set value:
+I<Returns>: Integer, the currently set value:
 
     score_desc:     0x00
     score_asc:      0x01
     ascii_desc:     0x02
     ascii_asc:      0x03
 
-B<Returns>: Bool, the currently set value.
+I<Returns>: Bool, the currently set value.
 
 =head1 PRIVATE METHODS
 
