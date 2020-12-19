@@ -16,6 +16,7 @@ os:
 
 env:
   - WORD_RHYMES_NO_FILE=1
+  - WORD_RHYMES_MOCK=1
 
 before_install:
   - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
@@ -26,6 +27,7 @@ before_install:
   - cd $BUILD_DIR             # $BUILD_DIR is set by the build-dist command
 
 install:
+  - cpan-install Mock::Sub
   - cpan-install Devel::Cover
   - cpan-install --deps       # installs prereqs, including recommends
   - cpan-install --coverage   # installs converage prereqs, if enabled
