@@ -1,5 +1,8 @@
 Revision history for Word-Rhymes
 
+1.02 UNREL
+        -
+
 1.01    2020-12-19
         - POD cleanup; Removed bolding of certain words in sub descriptions
         - Added example output sections in POD
