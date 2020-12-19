@@ -10,6 +10,7 @@ WriteMakefile(
     ABSTRACT_FROM    => 'lib/Word/Rhymes.pm',
     LICENSE          => 'artistic_2',
     PL_FILES         => {},
+    EXE_FILES        => ['bin/rhyme'],
     MIN_PERL_VERSION => '5.006',
     META_MERGE => {
         'meta-spec' => { version => 2 },

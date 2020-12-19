@@ -1,0 +1,54 @@
+#!/usr/bin/env perl
+
+use warnings;
+use strict;
+
+use Getopt::Long;
+use Word::Rhymes;
+
+my (%args, $help);
+
+GetOptions(
+    "help|h"        => \$help,
+    "multi|m=i"     => \$args{multi_word},
+    "results|r=i"   => \$args{max_results},
+    "score|S=i"     => \$args{min_score},
+    "sort|b=s"      => \$args{sort_by},
+    "syllables|s=i" => \$args{min_syllables},
+);
+
+if ($help) {
+    help();
+    exit;
+}
+
+if (! @ARGV) {
+    print "\nIncorrect usage! Word parameter is mandatory.\n";
+    help();
+    exit;
+}
+
+my ($word, $context) = @ARGV;
+
+my $wr = Word::Rhymes->new(%args);
+
+$wr->print($word, $context);
+
+sub help {
+    print <<EOF;
+
+Usage: rhyme [OPTIONS] <word> [context]
+
+Options:
+
+-h | --help         Print this help message
+-b | --sort_by      Sort by: score_desc (default), score_asc, alpha_desc, alpha_asc
+-s | --syllables    Minimum number of syllables in the rhyming words
+-S | --score        We only return words with a score equal to or higher than this
+-r | --results      Maximum number of results to fetch (default maximum 1000)
+-m | --multi        Include "words" that are multi-word phrases (flag)
+
+EOF
+
+    return 1;
+}
