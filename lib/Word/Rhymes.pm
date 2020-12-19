@@ -332,7 +332,8 @@ __END__
 Word::Rhymes - Takes a word and fetches rhyming matches from RhymeZone.com
 
 =for html
-<a href="http://travis-ci.com/stevieb9/word-rhymes"><img src="https://www.travis-ci.com/stevieb9/word-rhymes.svg?branch=master"/>
+<a href="http://travis-ci.com/stevieb9/word-rhymes"><img src="https://www.travis-ci.com/stevieb9/word-rhymes.svg?branch=master"/></a>
+<a href="https://ci.appveyor.com/project/stevieb9/word-rhymes"><img src="https://ci.appveyor.com/api/projects/status/x1u0nf8bvfg7q3m3?svg=true"/></a>
 <a href='https://coveralls.io/github/stevieb9/word-rhymes?branch=master'><img src='https://coveralls.io/repos/stevieb9/word-rhymes/badge.svg?branch=master&service=github' alt='Coverage Status' /></a>
 
 =head1 DESCRIPTION
