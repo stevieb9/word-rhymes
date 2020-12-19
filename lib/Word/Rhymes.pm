@@ -6,7 +6,6 @@ use warnings;
 our $VERSION = '0.01';
 
 use Carp qw(croak);
-use Data::Dumper;
 use HTTP::Request;
 use JSON;
 use LWP::UserAgent;
@@ -273,12 +272,6 @@ sub sort_by {
 sub _args {
     my ($self, $args) = @_;
 
-    # multi_word
-    $self->multi_word($args->{multi_word}) if exists $args->{multi_word};
-
-    # return_raw
-    $self->return_raw($args->{return_raw}) if exists $args->{return_raw};
-
     # file
     $self->file($args->{file}) if exists $args->{file};
 
@@ -290,6 +283,12 @@ sub _args {
 
     # min_syllables
     $self->min_syllables($args->{min_syllables}) if exists $args->{min_syllables};
+
+    # multi_word
+    $self->multi_word($args->{multi_word}) if exists $args->{multi_word};
+
+    # return_raw
+    $self->return_raw($args->{return_raw}) if exists $args->{return_raw};
 
     # sort_by
     $self->sort_by($args->{sort_by}) if exists $args->{sort_by};
@@ -363,7 +362,226 @@ words returned etc.
 A list of functions that can be exported.  You can delete this section
 if you don't export anything, such as for a purely object-oriented module.
 
-=head1 METHODS/FUNCTIONS
+=head1 METHODS
+
+=head2 new(%args)
+
+Instantiates and returns a new L<< Word::Rhymes >> object.
+
+B<Parameters>
+
+All parameters are passed in within a hash, and are every one of them optional.
+
+The parameters have an associated setter/getter method, so to see details for
+each parameter, follow through to the relevant method documentation.
+
+    file => $filename
+
+Used mainly for testing. Allows you to re-use existing, saved data. See
+L</file>.
+
+    max_results => $integer
+
+Sets the maximum number of rhyming words that'll be fetched over the Internet.
+See L</max_results>.
+
+    min_score => $integer
+
+We ignore rhyming words with a score less than what you set here. See
+L</min_score>.
+
+    min_syllables => $integer
+
+Ignore rhyming words with less than the set number of syllables. See
+L</min_syllables>.
+
+    multi_word => $bool
+
+By default, we ignore rhyming "words" that have more than one word (ie. a
+phrase). You can use this parameter to include them. See L</multi_word>.
+
+    return_raw => $bool
+
+Set to true to get returned via L</fetch> the data prior to all filtering and
+manipulation taking place. Used primarily for development and testing.
+See L</return_raw>.
+
+    sort_by => $string
+
+Sort by C<score_desc> (default), C<score_asc>, C<alpha_asc> or C<alpha_desc>.
+See L</sort_by>.
+
+B<Returns>: L<Word::Rhymes> object.
+
+=head2 fetch
+
+Performs the fetching of the rhyming words.
+
+B<Parameters>
+
+    $word
+
+B<Mandatory, String>: The word that'll be used to find rhyming matches to.
+
+    $context
+
+B<Optional, String>: This word is used to surround the rhyming words with
+context. For example, if C<$word> is C<animal> and C<$context> is C<zoo>, we'll
+fetch words that rhyme with animal but that are only related to a zoo somehow.
+
+B<Returns>: A hash reference where the keys are the number of syllables in the
+rhyming words, and the values are array reference with the ordered data
+structure containing the word, the number of syllables and the score.
+
+=head2 print
+
+This method will display to the screen instead of returning results which is
+what L</fetch> is used for.
+
+B<Parameters>
+
+    $word
+
+B<Mandatory, String>: The word that'll be used to find rhyming matches to.
+
+    $context
+
+B<Optional, String>: This word is used to surround the rhyming words with
+context. For example, if C<$word> is C<animal> and C<$context> is C<zoo>, we'll
+fetch words that rhyme with animal but that are only related to a zoo somehow.
+
+B<Returns>: 0 upon success.
+
+=head2 file
+
+Used primarily for development and testing, allows you to skip fetching results
+from the Internet, and instead fetches the data from a pre-saved file.
+
+B<Parameters>
+
+    $file
+
+B<Optional, String>: The name of a pre-existing file.
+
+B<Default>: Empty string.
+
+B<Returns>: The name of the file if set, empty string otherwise.
+
+=head2 max_results
+
+Sets the maximum number of rhyming words to fetch over the Internet.
+
+B<Parameters>
+
+    $max
+
+B<Optional, Integer>: An integer in the range of 1-1000.
+
+B<Default>: 1000
+
+B<Returns>: Integer, the currently set value.
+
+=head2 min_score
+
+We will only return rhyming words with a score higher than the number set here.
+
+B<Parameters>
+
+    $min
+
+B<Optional, Integer>: An integer in the range of 0-1000000.
+
+B<Default>: 0
+
+B<Returns>: Integer, the currently set value.
+
+=head2 min_syllables
+
+We will only return rhyming words with a syllable count equal to or higher than
+the number set here.
+
+B<Parameters>
+
+    $min
+
+B<Optional, Integer>: An integer in the range of 1-100 (yeah, I haven't heard
+of a word with 100 syllables either, but I digress).
+
+B<Default>: 1
+
+B<Returns>: Integer, the currently set value.
+
+=head2 multi_word
+
+Some rhyming words are actually multi-word phrases. By default, we skip over
+these. Set this to a true value to have the multi worded rhyming words included
+in the results.
+
+B<Parameters>
+
+    $bool
+
+B<Optional, Bool>: Set to true to include multi-words, and false to skip over
+them.
+
+B<Default>: 0 (false)
+
+B<Returns>: Bool, the currently set value.
+
+=head2 return_raw
+
+Used primarily for development and testing. Set to true to have L</fetch>
+return the results as they were received, prior to any other processing.
+
+B<Parameters>
+
+    $bool
+
+B<Optional, Bool>: Set to true to have the results returned before any
+processing occurs.
+
+B<Default>: 0 (false)
+
+B<Returns>: Bool, the currently set value.
+
+=head2 sort_by
+
+This method allows you to modify the sorting of the rhyming words prior to
+them being returned.
+
+B<Parameters>
+
+    $sort_order
+
+B<Optional, String>: The values for the parameter are as such:
+
+    score_desc
+
+The rhyming words will be sorted according to score, in a descending order
+(ie. highest to lowest). This is the default.
+
+    score_asc
+
+Return the rhyming words in ascending score order (ie. lowest to highest).
+
+    alpha_desc
+
+Return the rhyming words in alphabetical descending order (ie. a-z).
+
+    alpha_asc
+
+Return the rhyming words in alphabetical ascending order (ie. z-a).
+
+B<Default>: C<score_desc> (0x00).
+
+B<Returns>: Integer, the currently set value:
+
+    score_desc:     0x00
+    score_asc:      0x01
+    ascii_desc:     0x02
+    ascii_asc:      0x03
+
+B<Returns>: Bool, the currently set value.
 
 =head1 AUTHOR
 

@@ -15,12 +15,12 @@ WriteMakefile(
         'meta-spec' => { version => 2 },
         resources   => {
             bugtracker => {
-                web => 'https://github.com/stevieb9/words-rhyme/issues',
+                web => 'https://github.com/stevieb9/word-rhymes/issues',
             },
             repository => {
                 type => 'git',
-                url => 'https://github.com/stevieb9/words-rhyme.git',
-                web => 'https://github.com/stevieb9/words-rhyme',
+                url => 'https://github.com/stevieb9/word-rhymes.git',
+                web => 'https://github.com/stevieb9/word-rhymes',
             },
         },
     },
