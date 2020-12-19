@@ -241,6 +241,8 @@ sub print {
         }
         print "\n";
     }
+
+    return 0;
 }
 sub sort_by {
     my ($self, $sort_by) = @_;

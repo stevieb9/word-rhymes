@@ -30,5 +30,9 @@ my $mod = 'Word::Rhymes';
 
 }
 
+{
+    my $o = $mod->new(file => 't/data/zoo.data');
+    is $o->print('zoo'), 0, "return from print() ok";
+}
 done_testing
 
