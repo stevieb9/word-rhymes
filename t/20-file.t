@@ -37,9 +37,7 @@ my $mod = 'Word::Rhymes';
         undef,
         "file isn't a file fails ok";
 
-    if ($^O !~ /win/) {
-        like $@, qr/valid file/, "...and error is sane";
-    }
+    like $@, qr/valid file/, "...and error is sane";
 }
 
 # no file (only for coverage purposes)
@@ -61,7 +59,7 @@ my $mod = 'Word::Rhymes';
     like $@, qr/does not exist/, "...and error is sane";
 
     is
-        eval {$o->file('/lib'); 1},
+        eval {$o->file('lib/'); 1},
         undef,
         "file() croaks if the file isn't a real file ok";
 
