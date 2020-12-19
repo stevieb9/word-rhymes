@@ -11,8 +11,6 @@ use HTTP::Request;
 use JSON;
 use LWP::UserAgent;
 
-my $DEBUG = $ENV{WORD_RHYMES_DEBUG};
-
 use constant {
     # Core
     MIN_SCORE           => 0,
@@ -51,24 +49,6 @@ sub new {
     $self->_args(\%args);
 
     return $self;
-}
-sub return_raw {
-    my ($self, $ret) = @_;
-
-    if (defined $ret) {
-        $self->{return_raw} = $ret;
-    }
-
-    return $self->{return_raw} // RETURN_RAW;
-}
-sub multi_word {
-    my ($self, $bool) = @_;
-
-    if (defined $bool) {
-        $self->{multi_word} = $bool;
-    }
-
-    return $self->{multi_word} // MULTI_WORD;
 }
 sub fetch {
     my ($self, $word, $context) = @_;
@@ -219,6 +199,15 @@ sub min_syllables {
 
     return $self->{min_syllables} // MIN_SYLLABLES;
 }
+sub multi_word {
+    my ($self, $bool) = @_;
+
+    if (defined $bool) {
+        $self->{multi_word} = $bool;
+    }
+
+    return $self->{multi_word} // MULTI_WORD;
+}
 sub print {
     my ($self, $word, $context) = @_;
 
@@ -246,6 +235,15 @@ sub print {
     }
 
     return 0;
+}
+sub return_raw {
+    my ($self, $ret) = @_;
+
+    if (defined $ret) {
+        $self->{return_raw} = $ret;
+    }
+
+    return $self->{return_raw} // RETURN_RAW;
 }
 sub sort_by {
     my ($self, $sort_by) = @_;
