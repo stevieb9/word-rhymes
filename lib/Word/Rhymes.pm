@@ -3,7 +3,7 @@ package Word::Rhymes;
 use strict;
 use warnings;
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 use Carp qw(croak);
 use HTTP::Request;
