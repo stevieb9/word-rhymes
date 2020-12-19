@@ -441,7 +441,7 @@ Returns: A hash reference where the keys are the number of syllables in the
 rhyming words, and the values are array reference with the ordered data
 structure containing the word, the number of syllables and the score.
 
-See L</EXAMPLE OUTPUT> for a real world example.
+See L</EXAMPLE OUTPUT (fetch())> for a real world example.
 
 =head2 print
 
@@ -461,6 +461,8 @@ context. For example, if C<$word> is C<animal> and C<$context> is C<zoo>, we'll
 fetch words that rhyme with animal but that are only related to a zoo somehow.
 
 Returns: 0 upon success.
+
+See L</EXAMPLE OUTPUT (print())> for a real world example.
 
 =head2 file
 
@@ -608,7 +610,7 @@ Called by L</fetch>, processes the data retrieved from RhymeZone.com.
 
 Generates and returns the appropriate URL for the RhymeZone.com REST API.
 
-=head2 EXAMPLE OUTPUT
+=head1 EXAMPLE OUTPUT (fetch())
 
     use warnings;
     use strict;
@@ -676,6 +678,55 @@ Generates and returns the appropriate URL for the RhymeZone.com REST API.
             },
         ]
     };
+
+=head1 EXAMPLE OUTPUT (print())
+
+    use warnings;
+    use strict;
+
+    use Word::Rhymes;
+
+    my $wr = Word::Rhymes->new;
+
+    print $wr->print('organize');
+
+
+    # Below output significantly reduced for brevity
+
+    Rhymes with 'organize'
+
+    Syllables: 7
+
+        deinstitutionalize
+
+    Syllables: 6
+
+        editorialize      undercapitalize
+
+    Syllables: 5
+
+        materialize        compartmentalize   memorialize        sensationalize
+        decriminalize      overemphasize      demilitarize       denationalize
+
+    Syllables: 4
+
+        apologize        proselytize      prioritize       capitalize
+        marginalize      antagonize       metastasize      hypothesize
+
+    Syllables: 3
+
+        analyze        compromise     exercise       enterprise     otherwise
+        emphasize      galvanize      improvise      utilize        scrutinize
+
+    Syllables: 2
+
+        arise        advise       comprise     demise       surmise
+        franchise    surprise     disguise     reprise      revise
+
+    Syllables: 1
+
+        rise     mize     wise     eyes     size     prize    guise    flies
+
 
 =head1 AUTHOR
 
