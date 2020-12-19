@@ -376,7 +376,7 @@ See L<rhyme|https://metacpan.org/pod/distribution/Word-Rhymes/bin/rhyme>
 
 Instantiates and returns a new L<< Word::Rhymes >> object.
 
-B<Parameters>
+Parameters
 
 All parameters are passed in within a hash, and are every one of them optional.
 
@@ -419,7 +419,7 @@ See L</return_raw>.
 Sort by C<score_desc> (default), C<score_asc>, C<alpha_asc> or C<alpha_desc>.
 See L</sort_by>.
 
-B<Returns>: L<Word::Rhymes> object.
+Returns: L<Word::Rhymes> object.
 
 =head2 fetch
 
