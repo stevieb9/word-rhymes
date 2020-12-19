@@ -37,9 +37,5 @@ $ret = $o->fetch('zoo');
 is $is_success_sub->called, 1, "is_success() called ok";
 is $ret, undef, "mock of is_success() ok";
 
-
-
-
-
 done_testing();
 
