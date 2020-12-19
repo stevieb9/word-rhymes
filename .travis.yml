@@ -15,7 +15,7 @@ os:
     - linux
 
 env:
-  - WORD_RHYMES_NO_FILE=1 WORD_RHYMES_MOCK=1
+  - WORD_RHYMES_NO_FILE=1 WORD_RHYMES_MOCK=1 WORD_RHYMES_PRINT=1
 
 before_install:
   - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
