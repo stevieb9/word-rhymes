@@ -1,6 +1,6 @@
 Revision history for Word-Rhymes
 
-1.03 UNREL
+1.03    2021-01-05
     - Added new limit() parameter, limits the number of rhyming words to
       return/display under each syllable section (closes #1)
 
