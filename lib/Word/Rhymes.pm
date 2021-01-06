@@ -363,6 +363,11 @@ __END__
 
 Word::Rhymes - Takes a word and fetches rhyming matches from RhymeZone.com
 
+=for html
+<a href="https://github.com/stevieb9/word-rhymes/actions"><img src="https://github.com/stevieb9/word-rhymes/workflows/CI/badge.svg"/></a>
+<a href='https://coveralls.io/github/stevieb9/word-rhymes?branch=master'><img src='https://coveralls.io/repos/stevieb9/word-rhymes/badge.svg?branch=master&service=github' alt='Coverage Status' /></a>
+
+
 =head1 DESCRIPTION
 
 Provides the ability to fetch words that rhyme with a word, while allowing for
