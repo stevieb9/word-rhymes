@@ -2,6 +2,7 @@ Revision history for Word-Rhymes
 
 1.04 UNREL
     - Added CI badges
+    - Getopt::Long in rhymes program no longer ignores case in args (closes #2)
 
 1.03    2021-01-05
     - Added new limit() parameter, limits the number of rhyming words to
