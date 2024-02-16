@@ -11,7 +11,7 @@ my (%args, $help);
 GetOptions(
     "help|h"        => \$help,
     "limit|l=i"     => \$args{limit},
-    "multi|m=i"     => \$args{multi_word},
+    "multi|m"       => \$args{multi_word},
     "results|r=i"   => \$args{max_results},
     "score|S=i"     => \$args{min_score},
     "sort|b=s"      => \$args{sort_by},
