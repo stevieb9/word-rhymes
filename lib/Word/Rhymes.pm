@@ -88,7 +88,6 @@ sub fetch {
         }
 
         my $result = decode_json $json;
-
         return $result if $self->return_raw;
 
         return $self->_process($result);
@@ -215,6 +214,9 @@ sub print {
 
         for (0 .. $#{ $rhyming_words->{$num_syl} }) {
             printf "\n%s", ROW_INDENT if $_ % $columns == 0 && $_ != 0;
+            if ($rhyming_words->{$num_syl}[$_]->{word} =~ /\s+/) {
+                $rhyming_words->{$num_syl}[$_]->{word} = "'$rhyming_words->{$num_syl}[$_]->{word}'";
+            }
             printf("%-*s", $column_width, $rhyming_words->{$num_syl}[$_]->{word});
         }
         print "\n";

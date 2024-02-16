@@ -1,6 +1,9 @@
 Revision history for Word-Rhymes
 
 1.05 UNREL
+    - Fix bug where the --multi argument was expecting a parameter when it
+      shouldn't
+    - Phrases are now single quoted for ease of viewing
     -
 
 1.04    2021-01-15
